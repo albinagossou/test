@@ -1,0 +1,275 @@
+<template>
+  <v-card>
+    <v-card-title>
+      Mon Entreprise
+      <v-spacer />
+      <v-icon color="info" large>mdi-bank</v-icon>
+    </v-card-title>
+    <v-divider />
+    <v-card-text>
+      <v-card outlined>
+        <v-card-title>Mon entreprise</v-card-title>
+        <v-card-text v-if="!company" class="text-center">
+          Pas encore dans une entreprise ! --> faire un formulaire de création
+          ici ;)
+          <v-btn
+            rounded
+            color="success"
+            :loading="createCompanyLoading"
+            @click="showCompanyForm = true"
+          >
+            Creez votre entreprise
+          </v-btn>
+          <v-card outlined>
+            <v-card-text v-if="showCompanyForm" class="text-center">
+              <v-form>
+                <v-text-field
+                  v-model="companyData.name"
+                  label="Nom de l'entreprise"
+                  prepend-icon="mdi-account-circle"
+                />
+                <v-text-field
+                  v-model="companyData.siren"
+                  label="SIREN"
+                  prepend-icon="mdi-account-circle"
+                />
+                <v-text-field
+                  v-model="companyData.email"
+                  label="E-mail"
+                  type="email"
+                  prepend-icon="mdi-email"
+                />
+                <!-- Faire les gestions d'erreurs pour le formulaire company -->
+                <v-text-field
+                  v-model="companyData.phone"
+                  label="Téléphone"
+                  prepend-icon="mdi-phone-settings"
+                  :error-messages="companyPhoneErrors"
+                  @input="$v.companyData.phone.$touch()"
+                  @blur="$v.companyData.phone.$touch()"
+                  @keydown.enter="updateCompany"
+                />
+              </v-form>
+              <v-btn
+                rounded
+                color="success"
+                :loading="createCompanyLoading"
+                @click="createCompany"
+              >
+                Creez
+              </v-btn>
+            </v-card-text>
+          </v-card>
+        </v-card-text>
+        <v-card-text v-else>
+          <v-form>
+            <v-text-field
+              v-model="company.name"
+              label="Nom de l'entreprise"
+              prepend-icon="mdi-account-circle"
+              disabled
+            />
+            <v-text-field
+              v-model="company.siren"
+              label="SIREN"
+              prepend-icon="mdi-account-circle"
+              disabled
+            />
+            <v-text-field
+              v-model="company.email"
+              label="E-mail"
+              type="email"
+              prepend-icon="mdi-email"
+              disabled
+            />
+            <v-text-field
+              v-model="updateCompanyPhone"
+              label="Téléphone"
+              prepend-icon="mdi-phone-settings"
+              :error-messages="updateCompanyPhoneErrors"
+              @input="$v.updateCompanyPhone.$touch()"
+              @blur="$v.updateCompanyPhone.$touch()"
+              @keydown.enter="updateCompany"
+            />
+          </v-form>
+          <v-btn
+            rounded
+            color="success"
+            :loading="updateCompanyLoading"
+            @click="updateCompany"
+          >
+            Mettre à jour
+          </v-btn>
+          <v-btn
+            rounded
+            color="success"
+            :loading="deleteCompanyLoading"
+            @click="deleteMyCompany"
+          >
+            Supprimer
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import {
+  required,
+  minLength,
+  maxLength,
+  numeric,
+  email,
+} from 'vuelidate/lib/validators'
+
+export default {
+  data() {
+    return {
+      companyData: this.createFreshCompanyData(),
+      updateCompanyPhone: this.createFreshUpdateCompanyPhone(),
+      createCompanyLoading: false,
+      updateCompanyLoading: false,
+      showCompanyForm: false,
+      deleteCompanyLoading: false,
+    }
+  },
+
+  computed: {
+    ...mapState({
+      company: (state) => state.me.company,
+    }),
+    companyPhoneErrors() {
+      const errors = []
+      if (!this.$v.companyData.phone.$dirty) return errors
+      !this.$v.companyData.phone.numeric &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      !this.$v.companyData.phone.minLength &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      !this.$v.companyData.phone.maxLength &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      return errors
+    },
+    updateCompanyPhoneErrors() {
+      const errors = []
+      if (!this.$v.updateCompanyPhone.$dirty) return errors
+      !this.$v.updateCompanyPhone.numeric &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      !this.$v.updateCompanyPhone.minLength &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      !this.$v.updateCompanyPhone.maxLength &&
+        errors.push(
+          'Numéro invalide : merci de respecter le format 0033xxxxxxxxx.'
+        )
+      return errors
+    },
+  },
+  mounted() {
+    this.companyData = this.createFreshCompanyData()
+  },
+  methods: {
+    createFreshCompanyData() {
+      return {
+        name: this.company ? this.company.name : '',
+        siren: this.company ? this.company.siren : '',
+        email: this.company ? this.company.email : '',
+        phone: this.company ? this.company.phone : '',
+      }
+    },
+    createFreshUpdateCompanyPhone() {
+      return this.company ? this.company.phone : ''
+    },
+    showForm() {
+      return {
+        showCompanyForm: true,
+      }
+    },
+    createCompany() {
+      this.$v.companyData.$touch()
+      if (!this.$v.companyData.$invalid) {
+        this.createCompanyLoading = true
+        this.$store
+          .dispatch('me/createCompany', this.companyData)
+          .then(() => {
+            this.createCompanyLoading = false
+            this.companyData = this.createFreshCompanyData()
+            this.$v.companyData.$reset()
+            this.$emit('create-company-success')
+            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+          })
+          .catch((err) => {
+            this.createCompanyLoading = false
+            this.companyData = this.createFreshCompanyData()
+            this.$v.companyData.$reset()
+            this.$emit('create-company-fail', err)
+          })
+      }
+    },
+    updateCompany() {
+      this.$v.updateCompanyPhone.$touch()
+      if (!this.$v.updateCompanyPhone.$invalid) {
+        this.updateCompanyLoading = true
+        this.$store
+          .dispatch('me/updateCompany', this.updateCompanyPhone)
+          .then(() => {
+            this.updateCompanyLoading = false
+            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+            this.$v.updateCompanyPhone.$reset()
+            this.$emit('update-company-success')
+          })
+          .catch((err) => {
+            this.updateCompanyLoading = false
+            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+            this.$v.updateCompanyPhone.$reset()
+            this.$emit('update-company-fail', err)
+          })
+      }
+    },
+    deleteMyCompany() {
+      this.$v.companyData.$touch()
+      if (!this.$v.companyData.$invalid) {
+        this.deleteCompanyLoading = true
+        this.$store
+          .dispatch('me/deleteMyCompany', this.companyData)
+          .then(() => {
+            this.deleteCompanyLoading = false
+            this.companyData = this.createFreshCompanyData()
+            this.$v.companyData.$reset()
+            this.$emit('create-company-success')
+            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+          })
+          .catch((err) => {
+            this.deleteCompanyLoading = false
+            this.companyData = this.createFreshCompanyData()
+            this.$v.companyData.$reset()
+            this.$emit('create-company-fail', err)
+          })
+      }
+    },
+  },
+  validations: {
+    companyData: {
+      name: { required },
+      siren: { required, minLength: minLength(9), maxLength: maxLength(9) },
+      email: { required, email },
+      phone: { numeric, minLength: minLength(13), maxLength: maxLength(13) },
+    },
+    updateCompanyPhone: {
+      numeric,
+      minLength: minLength(13),
+      maxLength: maxLength(13),
+    },
+  },
+}
+</script>
