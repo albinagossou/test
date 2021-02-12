@@ -26,17 +26,20 @@
                 <v-text-field
                   v-model="companyData.name"
                   label="Nom de l'entreprise"
+                  :error-messages="nameCompanyErrors"
                   prepend-icon="mdi-account-circle"
                 />
                 <v-text-field
                   v-model="companyData.siren"
                   label="SIREN"
+                  :error-messages="sirenCompanyErrors"
                   prepend-icon="mdi-account-circle"
                 />
                 <v-text-field
                   v-model="companyData.email"
                   label="E-mail"
                   type="email"
+                  :error-messages="emailCompanyErrors"
                   prepend-icon="mdi-email"
                 />
                 <!-- Faire les gestions d'erreurs pour le formulaire company -->
@@ -157,6 +160,17 @@ export default {
         )
       return errors
     },
+    sirenCompanyErrors() {
+      const errors = []
+      if (!this.$v.companyData.siren.$dirty) return errors
+      !this.$v.companyData.siren.numeric &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+      !this.$v.companyData.siren.minLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+      !this.$v.companyData.siren.maxLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+      return errors
+    },
     updateCompanyPhoneErrors() {
       const errors = []
       if (!this.$v.updateCompanyPhone.$dirty) return errors
@@ -177,6 +191,7 @@ export default {
   },
   mounted() {
     this.companyData = this.createFreshCompanyData()
+    this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
   },
   methods: {
     createFreshCompanyData() {
@@ -236,26 +251,26 @@ export default {
           })
       }
     },
+
     deleteMyCompany() {
+      console.log(this.company)
       this.$v.companyData.$touch()
-      if (!this.$v.companyData.$invalid) {
-        this.deleteCompanyLoading = true
-        this.$store
-          .dispatch('me/deleteMyCompany', this.companyData)
-          .then(() => {
-            this.deleteCompanyLoading = false
-            this.companyData = this.createFreshCompanyData()
-            this.$v.companyData.$reset()
-            this.$emit('create-company-success')
-            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
-          })
-          .catch((err) => {
-            this.deleteCompanyLoading = false
-            this.companyData = this.createFreshCompanyData()
-            this.$v.companyData.$reset()
-            this.$emit('create-company-fail', err)
-          })
-      }
+      this.deleteCompanyLoading = true
+      this.$store
+        .dispatch('me/deleteMyCompany', this.companyData)
+        .then(() => {
+          this.deleteCompanyLoading = false
+          this.companyData = this.createFreshCompanyData()
+          this.$v.companyData.$reset()
+          this.$emit('delete-company-success')
+          this.deleteMyCompany = this.createFreshUpdateCompanyPhone()
+        })
+        .catch((err) => {
+          this.deleteCompanyLoading = false
+          this.companyData = this.createFreshCompanyData()
+          this.$v.companyData.$reset()
+          this.$emit('delete-company-fail', err)
+        })
     },
   },
   validations: {

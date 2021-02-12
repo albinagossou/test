@@ -22,8 +22,7 @@
     "@nuxtjs/axios": "^5.12.2",
     "cookie-universal-nuxt": "^2.1.4",
     "core-js": "^3.6.5",
-    "nuxt": "^2.14.12",
-    "vuelidate": "^0.7.6"
+    "nuxt": "^2.14.12"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",

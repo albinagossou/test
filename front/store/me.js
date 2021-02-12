@@ -9,6 +9,7 @@ export const mutations = {
     state.company = companyData
   },
   REMOVE_COMPANY(state) {
+    console.log('test')
     state.company = null
   },
 }
@@ -58,13 +59,11 @@ export const actions = {
       throw new Error("Problème pendant la mise à jour de l'entreprise")
     })
   },
+
   deleteMyCompany({ commit }) {
-    return MeService.deleteMyCompany().then((response) => {
-      if (response.data) {
-        return commit('REMOVE_COMPANY')
-      }
-      throw new Error("Problème pendant la suppression de l'entreprise")
-    })
+    // console.log('cc')
+
+    return commit('REMOVE_COMPANY')
   },
 }
 

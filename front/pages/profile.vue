@@ -34,6 +34,19 @@
                 : $event
             error = true
           "
+          @update-company-success="
+            successText = 'Informations entreprise bien mises à jour !'
+            success = true
+          "
+          @update-company-fail="
+            errorText =
+              $event.response &&
+              $event.response.data &&
+              $event.response.data.error
+                ? $event.response.data.error
+                : $event
+            error = true
+          "
         />
       </v-col>
     </v-row>
