@@ -160,15 +160,19 @@ export default {
         )
       return errors
     },
+    emailCompanyErrors() {
+      const errors = []
+      if (!this.$v.companyData.email.$dirty) return errors
+      !this.$v.companyData.email.email &&
+        errors.push('mail invalide : merci de respecter le format xxxx@xxxxx.')
+      return errors
+    },
     sirenCompanyErrors() {
       const errors = []
       if (!this.$v.companyData.siren.$dirty) return errors
       !this.$v.companyData.siren.numeric &&
         errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
-      !this.$v.companyData.siren.minLength &&
-        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
-      !this.$v.companyData.siren.maxLength &&
-        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+
       return errors
     },
     updateCompanyPhoneErrors() {
@@ -254,7 +258,6 @@ export default {
 
     deleteMyCompany() {
       console.log(this.company)
-      this.$v.companyData.$touch()
       this.deleteCompanyLoading = true
       this.$store
         .dispatch('me/deleteMyCompany', this.companyData)
@@ -276,7 +279,7 @@ export default {
   validations: {
     companyData: {
       name: { required },
-      siren: { required, minLength: minLength(9), maxLength: maxLength(9) },
+      siren: { required },
       email: { required, email },
       phone: { numeric, minLength: minLength(13), maxLength: maxLength(13) },
     },

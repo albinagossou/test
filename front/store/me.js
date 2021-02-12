@@ -62,8 +62,13 @@ export const actions = {
 
   deleteMyCompany({ commit }) {
     // console.log('cc')
-
-    return commit('REMOVE_COMPANY')
+    return MeService.deleteMyCompany().then((response) => {
+      // console.log('cc')
+      if (response.data) {
+        return commit('REMOVE_COMPANY', response.data)
+      }
+      throw new Error("Problème pendant la suppression de l'entreprise")
+    })
   },
 }
 

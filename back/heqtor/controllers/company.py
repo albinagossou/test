@@ -22,7 +22,7 @@ def create_company(name: str, siren: str, email: str, phone: str, made_by_id: in
     finally:
         session.close()
 
-
+   
 # TODO
 # get company by id, delete company
 
