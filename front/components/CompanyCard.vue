@@ -209,11 +209,6 @@ export default {
     createFreshUpdateCompanyPhone() {
       return this.company ? this.company.phone : ''
     },
-    showForm() {
-      return {
-        showCompanyForm: true,
-      }
-    },
     createCompany() {
       this.$v.companyData.$touch()
       if (!this.$v.companyData.$invalid) {
@@ -222,15 +217,15 @@ export default {
           .dispatch('me/createCompany', this.companyData)
           .then(() => {
             this.createCompanyLoading = false
+            this.$emit('create-company-success')
             this.companyData = this.createFreshCompanyData()
             this.$v.companyData.$reset()
-            this.$emit('create-company-success')
             this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+            this.$v.updateCompanyPhone.$reset()
+            this.showCompanyForm = false
           })
           .catch((err) => {
             this.createCompanyLoading = false
-            this.companyData = this.createFreshCompanyData()
-            this.$v.companyData.$reset()
             this.$emit('create-company-fail', err)
           })
       }
@@ -243,14 +238,12 @@ export default {
           .dispatch('me/updateCompany', this.updateCompanyPhone)
           .then(() => {
             this.updateCompanyLoading = false
+            this.$emit('update-company-success')
             this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
             this.$v.updateCompanyPhone.$reset()
-            this.$emit('update-company-success')
           })
           .catch((err) => {
             this.updateCompanyLoading = false
-            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
-            this.$v.updateCompanyPhone.$reset()
             this.$emit('update-company-fail', err)
           })
       }
@@ -266,12 +259,9 @@ export default {
           this.companyData = this.createFreshCompanyData()
           this.$v.companyData.$reset()
           this.$emit('delete-company-success')
-          this.deleteMyCompany = this.createFreshUpdateCompanyPhone()
         })
         .catch((err) => {
           this.deleteCompanyLoading = false
-          this.companyData = this.createFreshCompanyData()
-          this.$v.companyData.$reset()
           this.$emit('delete-company-fail', err)
         })
     },
