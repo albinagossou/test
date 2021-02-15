@@ -27,6 +27,8 @@
                   v-model="companyData.name"
                   label="Nom de l'entreprise"
                   prepend-icon="mdi-account-circle"
+                  :error-messages="nameCompanyErrors"
+                  required
                   @input="$v.companyData.name.$touch()"
                   @blur="$v.companyData.name.$touch()"
                 />
@@ -35,6 +37,7 @@
                   label="SIREN"
                   :error-messages="sirenCompanyErrors"
                   prepend-icon="mdi-account-circle"
+                  required
                   @input="$v.companyData.siren.$touch()"
                   @blur="$v.companyData.siren.$touch()"
                 />
@@ -44,6 +47,7 @@
                   type="email"
                   :error-messages="emailCompanyErrors"
                   prepend-icon="mdi-email"
+                  required
                   @input="$v.companyData.email.$touch()"
                   @blur="$v.companyData.email.$touch()"
                 />
@@ -53,6 +57,7 @@
                   label="Téléphone"
                   prepend-icon="mdi-phone-settings"
                   :error-messages="companyPhoneErrors"
+                  required
                   @input="$v.companyData.phone.$touch()"
                   @blur="$v.companyData.phone.$touch()"
                 />
@@ -161,6 +166,15 @@ export default {
         )
       return errors
     },
+    nameCompanyErrors() {
+      const errors = []
+      if (!this.$v.companyData.name.$dirty) return errors
+      !this.$v.companyData.name && errors.push('Ce champ ne doit pas être vide')
+      !this.$v.companyData.name.minLength && errors.push('Nom trop court')
+      !this.$v.companyData.name.maxLength && errors.push('Nom trop long')
+      return errors
+    },
+
     emailCompanyErrors() {
       const errors = []
       if (!this.$v.companyData.email.$dirty) return errors
@@ -173,11 +187,11 @@ export default {
       const errors = []
       if (!this.$v.companyData.siren.$dirty) return errors
       !this.$v.companyData.siren.numeric &&
-        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+        errors.push('Numéro invalide : merci de respecter le format 123456789.')
       !this.$v.companyData.siren.minLength &&
-        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+        errors.push('Numéro invalide : merci de respecter le format 123456789.')
       !this.$v.companyData.siren.maxLength &&
-        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+        errors.push('Numéro invalide : merci de respecter le format 123456789.')
       return errors
     },
     updateCompanyPhoneErrors() {
@@ -271,14 +285,14 @@ export default {
   },
   validations: {
     companyData: {
-      name: { required },
+      name: { required, minLength: minLength(1), maxLength: maxLength(35) },
       siren: {
         required,
         numeric,
         minLength: minLength(9),
         maxLength: maxLength(9),
       },
-      email: { required, email },
+      email: { required, email, maxLength: maxLength(50) },
       phone: {
         required,
         numeric,
@@ -287,6 +301,7 @@ export default {
       },
     },
     updateCompanyPhone: {
+      required,
       numeric,
       minLength: minLength(13),
       maxLength: maxLength(13),

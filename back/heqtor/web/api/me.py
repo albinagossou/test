@@ -43,9 +43,10 @@ class MeCompany(Resource):
 
     @jwt_required
     def put(self):
-        company_id = get_jwt_identity()["company_id"]
+        user_id = get_jwt_identity()["id"]
+        user = get_user(user_id)
         phone = request.json["phone"]
-        return update_company_data(company_id, phone)
+        return update_company_data(user.get("company_id"), phone)
 
     @jwt_required
     def delete(self):
