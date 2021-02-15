@@ -26,14 +26,17 @@
                 <v-text-field
                   v-model="companyData.name"
                   label="Nom de l'entreprise"
-                  :error-messages="nameCompanyErrors"
                   prepend-icon="mdi-account-circle"
+                  @input="$v.companyData.name.$touch()"
+                  @blur="$v.companyData.name.$touch()"
                 />
                 <v-text-field
                   v-model="companyData.siren"
                   label="SIREN"
                   :error-messages="sirenCompanyErrors"
                   prepend-icon="mdi-account-circle"
+                  @input="$v.companyData.siren.$touch()"
+                  @blur="$v.companyData.siren.$touch()"
                 />
                 <v-text-field
                   v-model="companyData.email"
@@ -41,6 +44,8 @@
                   type="email"
                   :error-messages="emailCompanyErrors"
                   prepend-icon="mdi-email"
+                  @input="$v.companyData.email.$touch()"
+                  @blur="$v.companyData.email.$touch()"
                 />
                 <!-- Faire les gestions d'erreurs pour le formulaire company -->
                 <v-text-field
@@ -126,7 +131,6 @@ import {
   numeric,
   email,
 } from 'vuelidate/lib/validators'
-
 export default {
   data() {
     return {
@@ -138,7 +142,6 @@ export default {
       deleteCompanyLoading: false,
     }
   },
-
   computed: {
     ...mapState({
       company: (state) => state.me.company,
@@ -165,6 +168,7 @@ export default {
       if (!this.$v.companyData.email.$dirty) return errors
       !this.$v.companyData.email.email &&
         errors.push('mail invalide : merci de respecter le format xxxx@xxxxx.')
+
       return errors
     },
     sirenCompanyErrors() {
@@ -172,7 +176,10 @@ export default {
       if (!this.$v.companyData.siren.$dirty) return errors
       !this.$v.companyData.siren.numeric &&
         errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
-
+      !this.$v.companyData.siren.minLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+      !this.$v.companyData.siren.maxLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
       return errors
     },
     updateCompanyPhoneErrors() {
@@ -248,9 +255,7 @@ export default {
           })
       }
     },
-
     deleteMyCompany() {
-      console.log(this.company)
       this.deleteCompanyLoading = true
       this.$store
         .dispatch('me/deleteMyCompany', this.companyData)
@@ -269,7 +274,12 @@ export default {
   validations: {
     companyData: {
       name: { required },
-      siren: { required },
+      siren: {
+        required,
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(9),
+      },
       email: { required, email },
       phone: { numeric, minLength: minLength(13), maxLength: maxLength(13) },
     },

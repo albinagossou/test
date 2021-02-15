@@ -8,6 +8,7 @@ from heqtor.controllers import (
     update_user_data,
     update_company_data,
     create_company,
+    delete_company
 )
 
 
@@ -48,6 +49,6 @@ class MeCompany(Resource):
 
     @jwt_required
     def delete(self):
-        company_id = get_jwt_identity()["company_id"]
-        return delete_company(company_id)
-
+        user_id = get_jwt_identity()["id"]
+        user = get_user(user_id)
+        return delete_company(user.get("company_id"))
