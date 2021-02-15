@@ -169,7 +169,8 @@ export default {
     nameCompanyErrors() {
       const errors = []
       if (!this.$v.companyData.name.$dirty) return errors
-      !this.$v.companyData.name && errors.push('Ce champ ne doit pas être vide')
+      !this.$v.companyData.name.required &&
+        errors.push('Ce champ ne doit pas être vide')
       !this.$v.companyData.name.minLength && errors.push('Nom trop court')
       !this.$v.companyData.name.maxLength && errors.push('Nom trop long')
       return errors
@@ -178,6 +179,8 @@ export default {
     emailCompanyErrors() {
       const errors = []
       if (!this.$v.companyData.email.$dirty) return errors
+      !this.$v.companyData.email.required &&
+        errors.push('Un e-mail est requis.')
       !this.$v.companyData.email.email &&
         errors.push('mail invalide : merci de respecter le format xxxx@xxxxx.')
 
@@ -186,6 +189,8 @@ export default {
     sirenCompanyErrors() {
       const errors = []
       if (!this.$v.companyData.siren.$dirty) return errors
+      !this.$v.companyData.siren.required &&
+        errors.push('Ce champ ne doit pas être vide')
       !this.$v.companyData.siren.numeric &&
         errors.push('Numéro invalide : merci de respecter le format 123456789.')
       !this.$v.companyData.siren.minLength &&
