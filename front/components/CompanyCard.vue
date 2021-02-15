@@ -55,7 +55,6 @@
                   :error-messages="companyPhoneErrors"
                   @input="$v.companyData.phone.$touch()"
                   @blur="$v.companyData.phone.$touch()"
-                  @keydown.enter="updateCompany"
                 />
               </v-form>
               <v-btn
@@ -97,7 +96,6 @@
               :error-messages="updateCompanyPhoneErrors"
               @input="$v.updateCompanyPhone.$touch()"
               @blur="$v.updateCompanyPhone.$touch()"
-              @keydown.enter="updateCompany"
             />
           </v-form>
           <v-btn
@@ -261,9 +259,9 @@ export default {
         .dispatch('me/deleteMyCompany', this.companyData)
         .then(() => {
           this.deleteCompanyLoading = false
+          this.$emit('delete-company-success')
           this.companyData = this.createFreshCompanyData()
           this.$v.companyData.$reset()
-          this.$emit('delete-company-success')
         })
         .catch((err) => {
           this.deleteCompanyLoading = false
@@ -281,7 +279,12 @@ export default {
         maxLength: maxLength(9),
       },
       email: { required, email },
-      phone: { numeric, minLength: minLength(13), maxLength: maxLength(13) },
+      phone: {
+        required,
+        numeric,
+        minLength: minLength(13),
+        maxLength: maxLength(13),
+      },
     },
     updateCompanyPhone: {
       numeric,
