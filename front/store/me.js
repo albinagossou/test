@@ -9,7 +9,6 @@ export const mutations = {
     state.company = companyData
   },
   REMOVE_COMPANY(state) {
-    console.log('test')
     state.company = null
   },
 }

@@ -20,20 +20,23 @@
           >
             Creez votre entreprise
           </v-btn>
-          <v-card outlined>
-            <v-card-text v-if="showCompanyForm" class="text-center">
+          <v-card v-if="showCompanyForm" outlined>
+            <v-card-text class="text-center">
               <v-form>
                 <v-text-field
                   v-model="companyData.name"
                   label="Nom de l'entreprise"
-                  :error-messages="nameCompanyErrors"
                   prepend-icon="mdi-account-circle"
+                  @input="$v.companyData.name.$touch()"
+                  @blur="$v.companyData.name.$touch()"
                 />
                 <v-text-field
                   v-model="companyData.siren"
                   label="SIREN"
                   :error-messages="sirenCompanyErrors"
                   prepend-icon="mdi-account-circle"
+                  @input="$v.companyData.siren.$touch()"
+                  @blur="$v.companyData.siren.$touch()"
                 />
                 <v-text-field
                   v-model="companyData.email"
@@ -41,6 +44,8 @@
                   type="email"
                   :error-messages="emailCompanyErrors"
                   prepend-icon="mdi-email"
+                  @input="$v.companyData.email.$touch()"
+                  @blur="$v.companyData.email.$touch()"
                 />
                 <!-- Faire les gestions d'erreurs pour le formulaire company -->
                 <v-text-field
@@ -126,7 +131,6 @@ import {
   numeric,
   email,
 } from 'vuelidate/lib/validators'
-
 export default {
   data() {
     return {
@@ -138,7 +142,6 @@ export default {
       deleteCompanyLoading: false,
     }
   },
-
   computed: {
     ...mapState({
       company: (state) => state.me.company,
@@ -165,6 +168,7 @@ export default {
       if (!this.$v.companyData.email.$dirty) return errors
       !this.$v.companyData.email.email &&
         errors.push('mail invalide : merci de respecter le format xxxx@xxxxx.')
+
       return errors
     },
     sirenCompanyErrors() {
@@ -172,7 +176,10 @@ export default {
       if (!this.$v.companyData.siren.$dirty) return errors
       !this.$v.companyData.siren.numeric &&
         errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
-
+      !this.$v.companyData.siren.minLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
+      !this.$v.companyData.siren.maxLength &&
+        errors.push('Numéro invalide : merci de respecter le format xxxxxxxxx.')
       return errors
     },
     updateCompanyPhoneErrors() {
@@ -209,11 +216,6 @@ export default {
     createFreshUpdateCompanyPhone() {
       return this.company ? this.company.phone : ''
     },
-    showForm() {
-      return {
-        showCompanyForm: true,
-      }
-    },
     createCompany() {
       this.$v.companyData.$touch()
       if (!this.$v.companyData.$invalid) {
@@ -222,15 +224,15 @@ export default {
           .dispatch('me/createCompany', this.companyData)
           .then(() => {
             this.createCompanyLoading = false
+            this.$emit('create-company-success')
             this.companyData = this.createFreshCompanyData()
             this.$v.companyData.$reset()
-            this.$emit('create-company-success')
             this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
+            this.$v.updateCompanyPhone.$reset()
+            this.showCompanyForm = false
           })
           .catch((err) => {
             this.createCompanyLoading = false
-            this.companyData = this.createFreshCompanyData()
-            this.$v.companyData.$reset()
             this.$emit('create-company-fail', err)
           })
       }
@@ -243,21 +245,17 @@ export default {
           .dispatch('me/updateCompany', this.updateCompanyPhone)
           .then(() => {
             this.updateCompanyLoading = false
+            this.$emit('update-company-success')
             this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
             this.$v.updateCompanyPhone.$reset()
-            this.$emit('update-company-success')
           })
           .catch((err) => {
             this.updateCompanyLoading = false
-            this.updateCompanyPhone = this.createFreshUpdateCompanyPhone()
-            this.$v.updateCompanyPhone.$reset()
             this.$emit('update-company-fail', err)
           })
       }
     },
-
     deleteMyCompany() {
-      console.log(this.company)
       this.deleteCompanyLoading = true
       this.$store
         .dispatch('me/deleteMyCompany', this.companyData)
@@ -266,12 +264,9 @@ export default {
           this.companyData = this.createFreshCompanyData()
           this.$v.companyData.$reset()
           this.$emit('delete-company-success')
-          this.deleteMyCompany = this.createFreshUpdateCompanyPhone()
         })
         .catch((err) => {
           this.deleteCompanyLoading = false
-          this.companyData = this.createFreshCompanyData()
-          this.$v.companyData.$reset()
           this.$emit('delete-company-fail', err)
         })
     },
@@ -279,7 +274,12 @@ export default {
   validations: {
     companyData: {
       name: { required },
-      siren: { required },
+      siren: {
+        required,
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(9),
+      },
       email: { required, email },
       phone: { numeric, minLength: minLength(13), maxLength: maxLength(13) },
     },

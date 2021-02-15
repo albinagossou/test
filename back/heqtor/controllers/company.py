@@ -26,7 +26,7 @@ def create_company(name: str, siren: str, email: str, phone: str, made_by_id: in
 # TODO
 # get company by id, delete company
 
-def get_company_byId(company_id: int):
+def get_company_by_id(company_id: int):
     session = Session()
     company = session.query(Company).get(company_id)
     if company is not None:
