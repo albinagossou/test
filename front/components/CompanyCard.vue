@@ -20,8 +20,8 @@
           >
             Creez votre entreprise
           </v-btn>
-          <v-card outlined>
-            <v-card-text v-if="showCompanyForm" class="text-center">
+          <v-card v-if="showCompanyForm" outlined>
+            <v-card-text class="text-center">
               <v-form>
                 <v-text-field
                   v-model="companyData.name"
