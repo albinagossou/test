@@ -11,5 +11,8 @@ api = Api(api_bp)
 
 api.add_resource(Me, "/me")
 api.add_resource(MeCompany, "/me/company")
+api.add_resource(Users, "/users")
+api.add_resource(Companies, "/companies")
+
 
 app.register_blueprint(api_bp, url_prefix="/api")
