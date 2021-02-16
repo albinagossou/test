@@ -1,6 +1,8 @@
 import { keysToCamelCase, keysToSnakeCase } from './helpers'
 import { setClient as setAuthClient } from './authService'
 import MeService, { setClient as setMeClient } from './meService'
+import { setClient as setUsersClient } from './usersServices'
+import { setClient as setCompaniesClient } from './companiesServices'
 
 let apiClient
 const onRequestSnakeCase = (config) => {
@@ -24,6 +26,18 @@ const onErrorUnauthorized = (error) => {
 
 function setAllApiClients() {
   setMeClient(
+    apiClient,
+    onRequestSnakeCase,
+    onResponseCamelCase,
+    onErrorUnauthorized
+  )
+  setUsersClient(
+    apiClient,
+    onRequestSnakeCase,
+    onResponseCamelCase,
+    onErrorUnauthorized
+  )
+  setCompaniesClient(
     apiClient,
     onRequestSnakeCase,
     onResponseCamelCase,
