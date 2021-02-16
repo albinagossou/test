@@ -5,6 +5,8 @@ from heqtor.core import db, Session
 from heqtor.web import app
 
 from .me import Me, MeCompany
+from .companies import Companies
+from .users import Users
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)

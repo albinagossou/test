@@ -29,7 +29,7 @@ export function clientOnError(onError) {
 }
 
 export default {
-  getMyCompanies() {
+  getAllCompanies() {
     if (!apiClient) throw new Error('Api client not installed.')
     return apiClient.get()
   },
