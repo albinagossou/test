@@ -26,7 +26,7 @@ def update_user_data(user_id: int, phone: str = None):
         session.close()
 
 # get all users
-def get_all_user():
+def get_all_users():
     session = Session()
     users = [user.get_small_data() for user in session.query(User).all()]
     session.close()

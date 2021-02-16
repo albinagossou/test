@@ -61,8 +61,8 @@ def delete_company(company_id: int):
     finally:
         session.close()
 
-def get_all_company():
+def get_all_companies():
     session = Session()
-    companies = session.query(Company).all()
+    companies = [company.get_small_data() for company in session.query(Company).all()]
     session.close()
     return companies
