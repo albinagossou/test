@@ -13,6 +13,9 @@ export const mutations = {
   CLEAR_COMPANIES(state) {
     state.companies = null
   },
+  ADD_COMPANY(state, company) {
+    state.companies.push(company)
+  },
   SET_USERS(state, usersDataList) {
     state.users = usersDataList
   },
@@ -41,6 +44,14 @@ export const actions = {
         return commit('CLEAR_COMPANIES', response.data)
       }
       throw new Error('Problème pendant la suppression des entreprises')
+    })
+  },
+  addCompanyToCompanies({ commit }) {
+    return CompaniesServices.addCompanyToCompanies().then((response) => {
+      if (response.data) {
+        return commit('ADD_COMPANY', response.data)
+      }
+      throw new Error("Problème pendant l'ajout de l'entreprise")
     })
   },
 }
