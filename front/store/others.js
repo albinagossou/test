@@ -11,13 +11,26 @@ export const mutations = {
     state.companies = companiesDataList
   },
   CLEAR_COMPANIES(state) {
-    state.companies = null
+    state.companies = []
   },
   ADD_COMPANY(state, company) {
     state.companies.push(company)
   },
-  SET_USERS(state, usersDataList) {
-    state.users = usersDataList
+  REMOVE_COMPANY(state, companyId) {
+    // state.companies = [{id: x}, {id: y}, ...]
+    state.companies = state.companies.filter(
+      (company) => company.id !== companyId
+    )
+    // state.companies = [{id: y}, ...]
+  },
+  UPDATE_COMPANY(state, companyData) {
+    // récupérer l'index correspondant
+
+    const i = state.companies.findIndex(
+      (company) => company.id === companyData.id
+    )
+    // puis modifier l'élément à cet index
+    state.companies[i] = companyData
   },
 }
 
@@ -38,21 +51,17 @@ export const actions = {
       throw new Error("L'utilisateur n'existe pas")
     })
   },
-  deleteMyCompanies({ commit }) {
-    return CompaniesServices.deleteMyCompanies().then((response) => {
-      if (response.data) {
-        return commit('CLEAR_COMPANIES', response.data)
-      }
-      throw new Error('Problème pendant la suppression des entreprises')
-    })
+  clearMyCompanies({ commit }) {
+    return commit('CLEAR_COMPANIES')
   },
-  addCompanyToCompanies({ commit }) {
-    return CompaniesServices.addCompanyToCompanies().then((response) => {
-      if (response.data) {
-        return commit('ADD_COMPANY', response.data)
-      }
-      throw new Error("Problème pendant l'ajout de l'entreprise")
-    })
+  addCompanyToCompanies({ commit }, company) {
+    return commit('ADD_COMPANY', company)
+  },
+  removeCompanyById({ commit }, companyId) {
+    return commit('ADD_COMPANY', companyId)
+  },
+  updateCompany({ commit }, companyData) {
+    return commit('UPDATE_COMPANY', companyData)
   },
 }
 
@@ -62,3 +71,30 @@ export const getters = {
   getUserById: (state) => (userId) =>
     state.users.find((user) => userId === user.id),
 }
+
+/* const companies = [
+  { id: 1, name: 'A' },
+  { id: 2, name: 'B' },
+  { id: 3, name: 'C' },
+  { id: 4, name: 'D' },
+]
+
+// find company with id = 2
+companies.find((company) => company.id === 2)
+// { id: 2, name: 'B' }
+
+// remove all companies with id > 3
+companies.filter((company) => company.id <= 3)
+// [
+//   { id: 1, name: 'A' },
+//   { id: 2, name: 'B' },
+//   { id: 3, name: 'C' },
+// ]
+companies.find((company) => company.id <= 3)
+//   { id: 1, name: 'A' }
+
+// remove a specific company (id = companyId)
+companies.filter((company) => company.id !== companyId)
+
+SELECT * FROM users WHERE users.salary < 1000
+users.filter((user) => user.salary < 1000)  */
