@@ -25,7 +25,6 @@ export const mutations = {
   },
   UPDATE_COMPANY(state, companyData) {
     // récupérer l'index correspondant
-
     const i = state.companies.findIndex(
       (company) => company.id === companyData.id
     )
@@ -33,6 +32,7 @@ export const mutations = {
     state.companies[i] = companyData
   },
   UPDATE_USER(state, userData) {
+    // récupérer l'index correspondant
     const i = state.users.findIndex((user) => user.id === userData.id)
     // puis modifier l'élément à cet index
     state.users[i] = userData
