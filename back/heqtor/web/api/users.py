@@ -4,9 +4,9 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 
 
 
-from heqtor.controllers import (get_all_user)
+from heqtor.controllers import (get_all_users)
 
 class Users(Resource):
   @jwt_required
   def get(self):
-    return get_all_user()
+    return get_all_users()
