@@ -10,6 +10,9 @@ export const mutations = {
   SET_COMPANIES(state, companiesDataList) {
     state.companies = companiesDataList
   },
+  CLEAR_COMPANIES(state) {
+    state.companies = null
+  },
   SET_USERS(state, usersDataList) {
     state.users = usersDataList
   },
@@ -30,6 +33,14 @@ export const actions = {
         return commit('SET_USERS', response.data)
       }
       throw new Error("L'utilisateur n'existe pas")
+    })
+  },
+  deleteMyCompanies({ commit }) {
+    return CompaniesServices.deleteMyCompanies().then((response) => {
+      if (response.data) {
+        return commit('CLEAR_COMPANIES', response.data)
+      }
+      throw new Error('Problème pendant la suppression des entreprises')
     })
   },
 }
