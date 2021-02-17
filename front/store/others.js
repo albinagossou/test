@@ -32,6 +32,11 @@ export const mutations = {
     // puis modifier l'élément à cet index
     state.companies[i] = companyData
   },
+  UPDATE_USER(state, userData) {
+    const i = state.users.findIndex((user) => user.id === userData.id)
+    // puis modifier l'élément à cet index
+    state.users[i] = userData
+  },
 }
 
 export const actions = {
@@ -58,10 +63,13 @@ export const actions = {
     return commit('ADD_COMPANY', company)
   },
   removeCompanyById({ commit }, companyId) {
-    return commit('ADD_COMPANY', companyId)
+    return commit('REMOVE_COMPANY', companyId)
   },
   updateCompany({ commit }, companyData) {
     return commit('UPDATE_COMPANY', companyData)
+  },
+  updateUser({ commit }, userData) {
+    return commit('UPDATE_USER', userData)
   },
 }
 
