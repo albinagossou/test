@@ -108,6 +108,13 @@ export default {
           toolbar: true,
           to: true,
         },
+        {
+          name: 'companies',
+          label: 'Autres entreprises',
+          icon: 'mdi-bank',
+          toolbar: true,
+          to: true,
+        },
 
         {
           name: 'other',
