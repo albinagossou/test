@@ -20,7 +20,7 @@
         />
       </v-col>
       <v-col cols="12" sm="6">
-        <company-card
+        <my-company-card
           @create-company-success="
             successText = 'Entreprise créée !'
             success = true
@@ -63,12 +63,12 @@
 
 <script>
 import ProfileCard from '@/components/ProfileCard.vue'
-import CompanyCard from '@/components/CompanyCard.vue'
+import MyCompanyCard from '@/components/MyCompanyCard.vue'
 
 export default {
   components: {
     ProfileCard,
-    CompanyCard,
+    MyCompanyCard,
   },
   async fetch({ store }) {
     !store.state.auth.user && (await store.dispatch('me/getProfile'))
