@@ -102,6 +102,14 @@ export default {
           to: true,
         },
         {
+          name: 'users',
+          label: 'Autres utilisateurs',
+          icon: 'mdi-account-group',
+          toolbar: true,
+          to: true,
+        },
+
+        {
           name: 'other',
           label: 'Autre onglet',
           icon: 'mdi-clipboard-text-outline',
