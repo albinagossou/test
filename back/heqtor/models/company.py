@@ -4,11 +4,11 @@ from .base import Base, IdPkMixin
 
 
 class Company(Base, IdPkMixin):
-    def get_small_data(User):
+    def get_small_data(self):
         b = super().get_small_data()
-        if User.company is not None:
-            b['users_qty'] = User.company.users
+        b['users_qty'] = len( self.users )
         return b
+
     name = Column(String(35), nullable=False)
     siren = Column(String(9), unique=True, nullable=False)
     email = Column(String(50), nullable=False)
