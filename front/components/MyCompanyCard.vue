@@ -61,6 +61,11 @@
                   @input="$v.companyData.phone.$touch()"
                   @blur="$v.companyData.phone.$touch()"
                 />
+                <v-text-field
+                  v-model="companyData.users"
+                  label="Utilisateurs"
+                  prepend-icon="mdi-account-group"
+                />
               </v-form>
               <v-btn
                 rounded
