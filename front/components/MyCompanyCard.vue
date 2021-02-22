@@ -61,11 +61,6 @@
                   @input="$v.companyData.phone.$touch()"
                   @blur="$v.companyData.phone.$touch()"
                 />
-                <v-text-field
-                  v-model="companyData.users"
-                  label="Utilisateurs"
-                  prepend-icon="mdi-account-group"
-                />
               </v-form>
               <v-btn
                 rounded
@@ -106,6 +101,12 @@
               :error-messages="updateCompanyPhoneErrors"
               @input="$v.updateCompanyPhone.$touch()"
               @blur="$v.updateCompanyPhone.$touch()"
+            />
+            <v-text-field
+              v-model="companyData.users"
+              label="Utilisateurs"
+              prepend-icon="mdi-account-group"
+              disabled
             />
           </v-form>
           <v-btn
