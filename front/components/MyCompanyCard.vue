@@ -103,7 +103,7 @@
               @blur="$v.updateCompanyPhone.$touch()"
             />
             <v-text-field
-              v-model="companyData.users"
+              v-model="company.usersQty"
               label="Utilisateurs"
               prepend-icon="mdi-account-group"
               disabled
