@@ -66,3 +66,33 @@ def get_all_companies():
     companies = [company.get_small_data() for company in session.query(Company).all()]
     session.close()
     return companies
+
+def get_all_users_from_company(company_id: int):
+    session = Session()
+    users = [user.get_small_data() for user in session.query(User).filter(User.company_id == company_id).all()]
+    session.close()
+    return users
+    
+def add_user_to_company(user_id: int, company_id: int):
+    session = Session()
+    user = session.query(User).get(user_id)
+    if user.company_id is not None:
+        session.close()
+        return False
+    user.company_id = company_id
+    session.commit()
+    session.close()
+    
+def remove_user_from_company(user_id: int, company_id: int):
+    session = Session()
+    user = session.query(User).get(user_id)
+    if user.company_id != company_id:
+        session.close()
+        return False
+    user.company_id = None
+    session.commit()
+    session.close()
+
+
+
+
