@@ -8,7 +8,10 @@ from heqtor.controllers import (
     update_user_data,
     update_company_data,
     create_company,
-    delete_company
+    delete_company,
+    get_all_users_from_company,
+    add_user_to_company,
+    
 )
 
 
@@ -53,3 +56,18 @@ class MeCompany(Resource):
         user_id = get_jwt_identity()["id"]
         user = get_user(user_id)
         return delete_company(user.get("company_id"))
+
+class MeCompanyUsers(Resource):
+    @jwt_required
+    def get(self):
+        user_id = get_jwt_identity()["id"]
+        user = get_user(user_id)
+        return get_all_users_from_company(user.get("company_id"))
+
+    @jwt_required
+    def post(self):
+        user_id = get_jwt_identity()["id"]
+        user = get_user(user_id)
+        sec_user = request.json["id"]
+        return add_user_to_company(sec_user, user.get("company_id"))        
+
