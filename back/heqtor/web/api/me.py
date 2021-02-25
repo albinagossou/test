@@ -71,3 +71,9 @@ class MeCompanyUsers(Resource):
         sec_user = request.json["id"]
         return add_user_to_company(sec_user, user.get("company_id"))        
 
+class MeCompanyUser(Resource):
+    @jwt_required
+    def delete(self, user_id: int):
+        my_id = get_jwt_identity()["id"]
+        made_by_user = get_user(my_id)
+        return remove_user_from_company(user_id, made_by_user.get("company_id"))      
