@@ -12,13 +12,13 @@ export const mutations = {
   REMOVE_COMPANY(state) {
     state.company = null
   },
-  SET_USER_TO_COMPANY(state, companyUsersDataList) {
+  SET_COMPANY_USERS(state, companyUsersDataList) {
     state.companyUsers = companyUsersDataList
   },
-  ADD_USER_TO_COMPANY(state, user) {
+  ADD_USER_TO_MY_COMPANY(state, user) {
     state.companyUsers.push(user)
   },
-  REMOVE_USER_FROM_COMPANY(state, userId) {
+  REMOVE_USER_FROM_MY_COMPANY(state, userId) {
     state.companyUsers = state.companyUsers.filter((user) => user.id !== userId)
   },
 }
@@ -80,19 +80,35 @@ export const actions = {
     })
   },
 
-  fetchUsersToMyCompany({ commit }) {
-    return MeService.getUsersFromCompany().then((response) => {
+  fetchMyCompanyUsers({ commit }) {
+    return MeService.getMyCompanyUsers().then((response) => {
       if (response.data) {
-        return commit('SET_USER_TO_COMPANY', response.data)
+        return commit('SET_COMPANY_USERS', response.data)
       }
-      throw new Error('Pas encore dans une entreprise')
+      throw new Error(
+        'Problème pendant le chargement des utilisateurs de mon entreprise'
+      )
     })
   },
-  addUsersToCompany({ commit }, user) {
-    return commit('ADD_USER_TO_COMPANY', user)
+  addUserToMyCompany({ commit }, user) {
+    return MeService.addUserToMyCompany(user).then((response) => {
+      if (response.data) {
+        return commit('ADD_USER_TO_MY_COMPANY', response.data)
+      }
+      throw new Error(
+        "Problème pendant l'ajout de l'utilisateur à l'entreprise"
+      )
+    })
   },
-  removeUserfromCompany({ commit }, userId) {
-    return commit('REMOVE_USER_FROM_COMPANY', userId)
+  removeUserfromMyCompany({ commit }, userId) {
+    return MeService.removeUserFromMyCompany(userId).then((response) => {
+      if (response.data) {
+        return commit('REMOVE_USER_FROM_MY_COMPANY', userId)
+      }
+      throw new Error(
+        "Problème pendant la suppression de l'utilisateur de l'entreprise"
+      )
+    })
   },
 }
 
