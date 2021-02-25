@@ -92,6 +92,8 @@ def remove_user_from_company(user_id: int, company_id: int):
     user.company_id = None
     session.commit()
     session.close()
+    return True
+
 
 
 
