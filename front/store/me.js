@@ -2,6 +2,7 @@ import MeService from '@/services/meService.js'
 
 export const state = () => ({
   company: null,
+  companyUsers: [],
 })
 
 export const mutations = {
