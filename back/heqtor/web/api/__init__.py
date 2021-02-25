@@ -15,7 +15,9 @@ api.add_resource(Me, "/me")
 api.add_resource(MeCompany, "/me/company")
 api.add_resource(Users, "/users")
 api.add_resource(Companies, "/companies")
-api.add_resource(Companies, "/me/company/users")
+api.add_resource(MeCompany, "/me/company/users")
+api.add_resource(MeCompany, "/me/company/users/<int:user_id")
+
 
 
 
