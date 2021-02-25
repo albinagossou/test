@@ -18,6 +18,9 @@ export const mutations = {
   ADD_USER_TO_COMPANY(state, user) {
     state.companyUsers.push(user)
   },
+  REMOVE_USER_FROM_COMPANY(state, userId) {
+    state.companyUsers = state.companyUsers.filter((user) => user.id !== userId)
+  },
 }
 
 export const actions = {
