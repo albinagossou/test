@@ -53,4 +53,16 @@ export default {
     if (!apiClient) throw new Error('Api client not installed.')
     return apiClient.delete('/company')
   },
+  getUsersFromCompany() {
+    if (!apiClient) throw new Error('Api client not installed.')
+    return apiClient.get('/me/company/users')
+  },
+  addUsersToCompany() {
+    if (!apiClient) throw new Error('Api client not installed.')
+    return apiClient.post('/me/company/users')
+  },
+  deleteUsersFromCompany() {
+    if (!apiClient) throw new Error('Api client not installed.')
+    return apiClient.delete('/me/company/users/<int: user_id>')
+  },
 }
