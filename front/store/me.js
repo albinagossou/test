@@ -12,6 +12,9 @@ export const mutations = {
   REMOVE_COMPANY(state) {
     state.company = null
   },
+  SET_USER_TO_COMPANY(state, companyUsersDataList) {
+    state.companyUsers = companyUsersDataList
+  },
 }
 
 export const actions = {
