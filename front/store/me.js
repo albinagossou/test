@@ -15,6 +15,9 @@ export const mutations = {
   SET_USER_TO_COMPANY(state, companyUsersDataList) {
     state.companyUsers = companyUsersDataList
   },
+  ADD_USER_TO_COMPANY(state, user) {
+    state.companyUsers.push(user)
+  },
 }
 
 export const actions = {
