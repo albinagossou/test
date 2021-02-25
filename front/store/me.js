@@ -79,6 +79,21 @@ export const actions = {
       throw new Error("Problème pendant la suppression de l'entreprise")
     })
   },
+
+  fetchUsersToMyCompany({ commit }) {
+    return MeService.getUsersFromCompany().then((response) => {
+      if (response.data) {
+        return commit('SET_USER_TO_COMPANY', response.data)
+      }
+      throw new Error('Pas encore dans une entreprise')
+    })
+  },
+  addUsersToCompany({ commit }, user) {
+    return commit('ADD_USER_TO_COMPANY', user)
+  },
+  removeUserfromCompany({ commit }, userId) {
+    return commit('REMOVE_USER_FROM_COMPANY', userId)
+  },
 }
 
 export const getters = {}
