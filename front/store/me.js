@@ -93,7 +93,7 @@ export const actions = {
   addUserToMyCompany({ commit }, user) {
     return MeService.addUserToMyCompany(user).then((response) => {
       if (response.data) {
-        return commit('ADD_USER_TO_MY_COMPANY', response.data)
+        return commit('ADD_USER_TO_MY_COMPANY', user)
       }
       throw new Error(
         "Problème pendant l'ajout de l'utilisateur à l'entreprise"
