@@ -68,7 +68,7 @@ class MeCompanyUsers(Resource):
     def post(self):
         user_id = get_jwt_identity()["id"]
         user = get_user(user_id)
-        sec_user = request.json["id"]
+        sec_user = request.json["user_id"]
         return add_user_to_company(sec_user, user.get("company_id"))        
 
 class MeCompanyUser(Resource):
