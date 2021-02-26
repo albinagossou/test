@@ -59,10 +59,10 @@ export default {
   },
   addUserToMyCompany(userId) {
     if (!apiClient) throw new Error('Api client not installed.')
-    return apiClient.post('/me/company/users', userId)
+    return apiClient.post('/me/company/users', { userId })
   },
   removeUserFromMyCompany(userId) {
     if (!apiClient) throw new Error('Api client not installed.')
-    return apiClient.delete('/me/company/users/<userId>')
+    return apiClient.delete('/me/company/users/' + userId)
   },
 }
