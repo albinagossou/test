@@ -125,6 +125,14 @@
           >
             Supprimer
           </v-btn>
+          <v-dialog v-model="myCompanyUsersDialog" width="500">
+            <template v-slot:activator="{ on }">
+              <v-btn rounded color="success" v-on="on">
+                Voir les utilisateurs
+              </v-btn>
+            </template>
+            <my-company-users-card> </my-company-users-card>
+          </v-dialog>
         </v-card-text>
       </v-card>
     </v-card-text>
@@ -140,7 +148,10 @@ import {
   numeric,
   email,
 } from 'vuelidate/lib/validators'
+import MyCompanyUsersCard from './MyCompanyUsersCard.vue'
+
 export default {
+  components: { MyCompanyUsersCard },
   data() {
     return {
       companyData: this.createFreshCompanyData(),
