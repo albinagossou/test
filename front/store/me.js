@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import MeService from '@/services/meService.js'
 
 export const state = () => ({
