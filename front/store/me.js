@@ -92,7 +92,6 @@ export const actions = {
     })
   },
   addUserToMyCompany({ commit }, user) {
-    console.log(user)
     return MeService.addUserToMyCompany(user.id).then((response) => {
       if (response.data) {
         return commit('ADD_USER_TO_MY_COMPANY', user)
@@ -102,7 +101,7 @@ export const actions = {
       )
     })
   },
-  removeUserfromMyCompany({ commit }, userId) {
+  removeUserFromMyCompany({ commit }, userId) {
     return MeService.removeUserFromMyCompany(userId).then((response) => {
       if (response.data) {
         return commit('REMOVE_USER_FROM_MY_COMPANY', userId)

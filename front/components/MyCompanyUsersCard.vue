@@ -7,6 +7,20 @@
         :items="companyUsers"
         class="elevation-1"
       >
+        <template v-slot:item.action="{ item }">
+          <div class="d-flex justify-center">
+            <v-icon
+              small
+              color="error"
+              @click="
+                userIdToRemove = item.id
+                removeUserDialog = true
+              "
+            >
+              mdi-delete
+            </v-icon>
+          </div>
+        </template>
       </v-data-table>
     </v-card-text>
     <v-dialog v-model="addUserDialog" width="500">
@@ -38,6 +52,25 @@
         </v-btn>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="removeUserDialog" width="300">
+      <v-card>
+        <v-card-title
+          class="error deadline"
+          style="font-weight: bold; color: white"
+          >Confirmer la suppression</v-card-title
+        >
+        <v-card-text
+          >Etes vous sur de vouloir supprimer cet utilisateur?</v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="removeUserDialog = false">Non</v-btn>
+          <v-btn :loading="removeUserLoading" color="error" @click="removeUser"
+            >Oui
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 <script>
@@ -47,8 +80,10 @@ export default {
   data() {
     return {
       addUserDialog: false,
+      removeUserDialog: true,
       userToAdd: null,
       addUserLoading: false,
+      removeUserLoading: false,
     }
   },
   computed: {
@@ -58,6 +93,7 @@ export default {
         { text: 'Nom', value: 'lastName' },
         { text: 'Prenom', value: 'firstName' },
         { text: 'Telephone', value: 'phone' },
+        { text: 'Actions', value: 'action' },
       ]
     },
     ...mapState({
@@ -81,6 +117,20 @@ export default {
         .catch((err) => {
           this.addUserLoading = false
           this.$emit('add-user-fail', err)
+        })
+    },
+    removeUser() {
+      this.removeUserLoading = true
+      this.$store
+        .dispatch('me/removeUserFromMyCompany', this.userIdToRemove)
+        .then(() => {
+          this.removeUserLoading = false
+          this.$emit('remove-user-success')
+          this.removeUserDialog = false
+        })
+        .catch((err) => {
+          this.removeUserLoading = false
+          this.$emit('remove-user-fail', err)
         })
     },
   },

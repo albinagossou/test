@@ -60,6 +60,19 @@
                 : $event
             error = true
           "
+          @remove-user-success="
+            successText = 'Suppression utilisateur réussie'
+            success = true
+          "
+          @remove-user-fail="
+            errorText =
+              $event.response &&
+              $event.response.data &&
+              $event.response.data.error
+                ? $event.response.data.error
+                : $event
+            error = true
+          "
         />
       </v-col>
     </v-row>

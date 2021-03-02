@@ -134,6 +134,8 @@
             <my-company-users-card
               @add-user-success="$emit('add-user-success')"
               @add-user-fail="$emit('add-user-fail', $event)"
+              @remove-user-success="$emit('remove-user-success')"
+              @remove-user-fail="$emit('remove-user-fail', $event)"
             >
             </my-company-users-card>
           </v-dialog>
