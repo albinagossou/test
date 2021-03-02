@@ -11,6 +11,7 @@ from heqtor.controllers import (
     delete_company,
     get_all_users_from_company,
     add_user_to_company,
+    remove_user_from_company
     
 )
 
@@ -70,7 +71,7 @@ class MeCompanyUsers(Resource):
         user = get_user(user_id)
         sec_user = request.json["user_id"]
         return add_user_to_company(sec_user, user.get("company_id"))
-                
+
 
 class MeCompanyUser(Resource):
     @jwt_required
