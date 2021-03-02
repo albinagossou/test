@@ -82,6 +82,7 @@ def add_user_to_company(user_id: int, company_id: int):
     user.company_id = company_id
     session.commit()
     session.close()
+    return True
     
 def remove_user_from_company(user_id: int, company_id: int):
     session = Session()

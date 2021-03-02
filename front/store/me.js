@@ -92,7 +92,8 @@ export const actions = {
     })
   },
   addUserToMyCompany({ commit }, user) {
-    return MeService.addUserToMyCompany(user).then((response) => {
+    console.log(user)
+    return MeService.addUserToMyCompany(user.id).then((response) => {
       if (response.data) {
         return commit('ADD_USER_TO_MY_COMPANY', user)
       }

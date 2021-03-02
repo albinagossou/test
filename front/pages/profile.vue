@@ -47,6 +47,19 @@
                 : $event
             error = true
           "
+          @add-user-success="
+            successText = 'Ajout utilisateur réussi'
+            success = true
+          "
+          @add-user-fail="
+            errorText =
+              $event.response &&
+              $event.response.data &&
+              $event.response.data.error
+                ? $event.response.data.error
+                : $event
+            error = true
+          "
         />
       </v-col>
     </v-row>
@@ -64,7 +77,6 @@
 <script>
 import ProfileCard from '@/components/ProfileCard.vue'
 import MyCompanyCard from '@/components/MyCompanyCard.vue'
-
 export default {
   components: {
     ProfileCard,
@@ -74,6 +86,10 @@ export default {
     !store.state.auth.user && (await store.dispatch('me/getProfile'))
     !store.state.me.company &&
       (await store.dispatch('me/fetchMyCompany').catch(() => {}))
+    !store.state.me.companyUsers.length &&
+      (await store.dispatch('me/fetchMyCompanyUsers').catch(() => {}))
+    !store.state.others.users.length &&
+      (await store.dispatch('others/fetchUsers'))
   },
   data() {
     return {

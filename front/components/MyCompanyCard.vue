@@ -131,7 +131,11 @@
                 Voir les utilisateurs
               </v-btn>
             </template>
-            <my-company-users-card> </my-company-users-card>
+            <my-company-users-card
+              @add-user-success="$emit('add-user-success')"
+              @add-user-fail="$emit('add-user-fail', $event)"
+            >
+            </my-company-users-card>
           </v-dialog>
         </v-card-text>
       </v-card>
@@ -154,6 +158,7 @@ export default {
   components: { MyCompanyUsersCard },
   data() {
     return {
+      myCompanyUsersDialog: false,
       companyData: this.createFreshCompanyData(),
       updateCompanyPhone: this.createFreshUpdateCompanyPhone(),
       createCompanyLoading: false,
